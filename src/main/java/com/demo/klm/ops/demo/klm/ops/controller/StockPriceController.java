@@ -1,6 +1,7 @@
 package com.demo.klm.ops.demo.klm.ops.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +22,7 @@ public class StockPriceController {
 	StockPriceBusinessService businessService;
 	
 	@RequestMapping(method=RequestMethod.GET,path="/getStocks")
-	public StockPrice getStockPrice()
+	public List<StockPrice> getStockPrice()
 	{
 		return jdbcRep.findById();
 	}
