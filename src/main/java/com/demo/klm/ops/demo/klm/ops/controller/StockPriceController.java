@@ -24,7 +24,7 @@ public class StockPriceController {
 	@RequestMapping(method=RequestMethod.GET,path="/getStocks")
 	public List<StockPrice> getStockPrice()
 	{
-		return jdbcRep.findById();
+		return jdbcRep.findAll();
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,path="/insertStocks")
