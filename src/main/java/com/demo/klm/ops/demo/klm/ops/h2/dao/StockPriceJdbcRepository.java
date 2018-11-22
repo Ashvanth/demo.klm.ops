@@ -57,17 +57,49 @@ public class StockPriceJdbcRepository {
 	 @SuppressWarnings("unchecked")
 	public StockPrice fetchCostByDate(String date) throws ParseException
 	 {
-		
+		System.out.println("--------------------"+date);
 		 StockPrice stockPriceobj = new StockPrice();
-		 String dateFormat = date.replace("-", "/");
+		
 		 stockPriceobj=   jdbcTemplate.queryForObject("select * from stockprice where date=?", new Object[] {
 		            
-				 dateFormat },
+				 date },
 	        new BeanPropertyRowMapper < StockPrice>  (StockPrice.class));
 		
 		 return stockPriceobj;
 	
 		
 	 }
+	 
+	 public List<StockPrice> getCostByTime(String inputValue)
+	 {
+		List <StockPrice> stockPriceobj = new ArrayList<StockPrice>();
+		if(!inputValue.startsWith("/"))
+		{
+			stockPriceobj=	 jdbcTemplate.query("select * from stockprice where date like ?", new Object[] {
+		            
+					 inputValue+"%" },   new BeanPropertyRowMapper < StockPrice>  (StockPrice.class));
+			
+		}
+		else
+		{
+		stockPriceobj=	 jdbcTemplate.query("select * from stockprice where date like ?", new Object[] {
+		            
+				 "%"+inputValue+"%" },   new BeanPropertyRowMapper < StockPrice>  (StockPrice.class));
+				}
+		System.out.println("___________________"+stockPriceobj.size());
+		return stockPriceobj;
+	 }
+	 
+	 public List<StockPrice> fetchCostByDateAndMonth(String inputValue)
+	 {
+		 List <StockPrice> stockPriceobj = new ArrayList<StockPrice>();
+		 
+		 stockPriceobj=	 jdbcTemplate.query("select * from stockprice where date like ?", new Object[] {
+		            
+				 inputValue+"%" },   new BeanPropertyRowMapper < StockPrice>  (StockPrice.class));
+		 System.out.println("__________________--DATE MONTH OBJECTS"+stockPriceobj.size());
+		 return stockPriceobj;
+	 }
+	
 	 
 }

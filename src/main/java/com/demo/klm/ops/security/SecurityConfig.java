@@ -1,4 +1,4 @@
-package com.demo.klm.ops.security;
+/*package com.demo.klm.ops.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -25,4 +25,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     {
         auth.inMemoryAuthentication().withUser("user").password("{noop}password").roles("USER");
     }
-}
+}*/
