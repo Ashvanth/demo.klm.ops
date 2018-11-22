@@ -1,16 +1,19 @@
 package com.demo.klm.ops.demo.klm.ops.controller;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.klm.ops.demo.klm.ops.business.StockPriceBusinessService;
 import com.demo.klm.ops.demo.klm.ops.h2.dao.StockPriceJdbcRepository;
-import com.demo.klm.ops.demo.klm.ops.pojo.StockPrice;
+import com.demo.klm.ops.demo.klm.ops.model.StockPrice;
 
 @RestController
 public class StockPriceController {
@@ -31,6 +34,12 @@ public class StockPriceController {
 	public void insertStockPrices() throws ClassNotFoundException, IOException
 	{
 		businessService.insertStockPrince();
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value = "/getStocks/{date}")
+	public Double getCostByDate(@PathVariable("date") String date ) throws ParseException
+	{
+		return businessService.getCostByDate(date);
 	}
 
 }

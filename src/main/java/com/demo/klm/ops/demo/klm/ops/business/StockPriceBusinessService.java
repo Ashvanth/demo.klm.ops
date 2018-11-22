@@ -4,14 +4,22 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.demo.klm.ops.demo.klm.ops.pojo.StockPrice;
+import com.demo.klm.ops.demo.klm.ops.h2.dao.StockPriceJdbcRepository;
+import com.demo.klm.ops.demo.klm.ops.model.StockPrice;
 
 @Service
 public class StockPriceBusinessService {
+	
+	@Autowired
+	StockPriceJdbcRepository jdbcRep;
 
+	@SuppressWarnings("null")
 	public StockPrice insertStockPrince() throws IOException,ClassNotFoundException
 	{
 		StockPrice stockPrice=null;
@@ -46,5 +54,21 @@ public class StockPriceBusinessService {
         }
 		return stockPrice;
 	}
+	
+	public Double getCostByDate(String date) throws ParseException
+	{
+		StockPrice stockPriceObj = new StockPrice();
+		 Double closeRate = null;
+		stockPriceObj = jdbcRep.fetchCostByDate(date);
+		
+		//to get close rate from the list 
+		if(stockPriceObj!=null )
+		{
+		closeRate =stockPriceObj.getClose();
+		}
+		return closeRate;
+		
+	}
+	
 	
 }

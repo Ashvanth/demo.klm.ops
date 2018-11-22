@@ -1,4 +1,5 @@
-package com.demo.klm.ops.demo.klm.ops.pojo;
+package com.demo.klm.ops.demo.klm.ops.model;
+
 
 public class StockPrice {
 
@@ -7,6 +8,16 @@ public class StockPrice {
     private double high;
     private double low;
     private double open;
+    private String date;
+    
+    
+	
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
 	public Long getId() {
 		return id;
 	}

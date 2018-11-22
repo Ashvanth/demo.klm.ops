@@ -14,7 +14,6 @@ import com.demo.klm.ops.demo.klm.ops.h2.dao.StockPriceJdbcRepository;
 @SpringBootApplication
 public class Application implements CommandLineRunner{
 	
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
     StockPriceJdbcRepository repository;
@@ -25,7 +24,6 @@ public class Application implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
-		// TODO Auto-generated method stub
-		// logger.info("Stock id 10001 -> {}", repository.findAll());
+		
 	}
 }

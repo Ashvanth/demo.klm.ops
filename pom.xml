@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
+		</dependency> 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -63,7 +63,7 @@
 			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
 			<version>2.0.0.RELEASE</version>
 		</dependency> -->
-		<dependency>
+	<!-- 	<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>jquery</artifactId>
 			<version>2.1.1</version>
@@ -76,8 +76,8 @@
 		<dependency>
 			<groupId>org.webjars</groupId>
 			<artifactId>webjars-locator-core</artifactId>
-		</dependency>
-	</dependencies>
+		</dependency>-->
+	</dependencies> 
 
 	<build>
 		<plugins>
