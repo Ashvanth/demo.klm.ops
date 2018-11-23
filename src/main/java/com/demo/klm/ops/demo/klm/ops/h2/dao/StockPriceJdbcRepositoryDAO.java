@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 import com.demo.klm.ops.demo.klm.ops.model.StockPrice;
 
 @Repository
-public class StockPriceJdbcRepository {
+public class StockPriceJdbcRepositoryDAO {
 	
 	 @Autowired
 	    JdbcTemplate jdbcTemplate;
@@ -57,7 +57,6 @@ public class StockPriceJdbcRepository {
 	 @SuppressWarnings("unchecked")
 	public StockPrice fetchCostByDate(String date) throws ParseException
 	 {
-		System.out.println("--------------------"+date);
 		 StockPrice stockPriceobj = new StockPrice();
 		
 		 stockPriceobj=   jdbcTemplate.queryForObject("select * from stockprice where date=?", new Object[] {
@@ -73,6 +72,8 @@ public class StockPriceJdbcRepository {
 	 public List<StockPrice> getCostByTime(String inputValue)
 	 {
 		List <StockPrice> stockPriceobj = new ArrayList<StockPrice>();
+		if(inputValue!=null)
+		{
 		if(!inputValue.startsWith("/"))
 		{
 			stockPriceobj=	 jdbcTemplate.query("select * from stockprice where date like ?", new Object[] {
@@ -86,18 +87,22 @@ public class StockPriceJdbcRepository {
 		            
 				 "%"+inputValue+"%" },   new BeanPropertyRowMapper < StockPrice>  (StockPrice.class));
 				}
-		System.out.println("___________________"+stockPriceobj.size());
 		return stockPriceobj;
 	 }
+		else
+		{
+			return stockPriceobj;
+		}
+	 }
 	 
-	 public List<StockPrice> fetchCostByDateAndMonth(String inputValue)
+	 public List<StockPrice> fetchCostByYearAndMonth(String inputValue)
 	 {
 		 List <StockPrice> stockPriceobj = new ArrayList<StockPrice>();
 		 
+		 
 		 stockPriceobj=	 jdbcTemplate.query("select * from stockprice where date like ?", new Object[] {
 		            
-				 inputValue+"%" },   new BeanPropertyRowMapper < StockPrice>  (StockPrice.class));
-		 System.out.println("__________________--DATE MONTH OBJECTS"+stockPriceobj.size());
+				 inputValue },   new BeanPropertyRowMapper < StockPrice>  (StockPrice.class));
 		 return stockPriceobj;
 	 }
 	

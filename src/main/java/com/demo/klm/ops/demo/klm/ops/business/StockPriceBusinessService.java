@@ -1,27 +1,25 @@
 package com.demo.klm.ops.demo.klm.ops.business;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.demo.klm.ops.demo.klm.ops.h2.dao.StockPriceJdbcRepository;
+import com.demo.klm.ops.demo.klm.ops.h2.dao.StockPriceJdbcRepositoryDAO;
 import com.demo.klm.ops.demo.klm.ops.model.StockPrice;
+import com.demo.klm.ops.security.ResponseModel;
 
 @Service
 public class StockPriceBusinessService {
 	
 	@Autowired
-	StockPriceJdbcRepository jdbcRep;
+	StockPriceJdbcRepositoryDAO jdbcRep;
 	
-	private Double CostpriceGlobalValue= 0.0;
+	private Double costpriceGlobalValue= 0.0;
+	private double avgCostPrice ;
+	private	double costPriceValue;
 
 	
 	public Double getCostByDate(String date) throws ParseException
@@ -40,38 +38,67 @@ public class StockPriceBusinessService {
 		
 	}
 	
-	public Double getCostByDateAndMonth(String date)
+	public ResponseModel getCostByYearAndMonth(String date)
 	{
+		int numberOfData = 0 ;
 		List<StockPrice> stockPriceObj = new ArrayList<StockPrice>();
-		 Double closeRate ;
-		 String dateFormat = date.replace("-", "/");
-		 stockPriceObj = jdbcRep.fetchCostByDateAndMonth(dateFormat);
-		 closeRate = calculateSumOfCloseRate(stockPriceObj);
-		 return closeRate;
+		ResponseModel respModelObj = new ResponseModel();
+		List<ResponseModel> responseModelList = new ArrayList<ResponseModel>();
+		 stockPriceObj = jdbcRep.fetchCostByYearAndMonth(date);
+		 numberOfData = stockPriceObj.size();
+		 if(numberOfData>0)
+		 {
+		 respModelObj = calculateSumAndAvgOfCloseRate(stockPriceObj,numberOfData);
+		 }
+		 return respModelObj;
 	}
 	
 	
-	public Double getCostByPeriod(String timeValue)
+	public ResponseModel getCostByPeriod(String timeValue)
 	{
-		double sumOfCostPriceValue;
+		int numberOfData =0;
 		List<StockPrice> stockPriceObj = new ArrayList<StockPrice>();
+		ResponseModel respModelObj = new ResponseModel();
 		stockPriceObj =jdbcRep.getCostByTime(timeValue);
+		if(stockPriceObj!=null && stockPriceObj.size()>0)
+		{
+		numberOfData = stockPriceObj.size();
+		respModelObj = calculateSumAndAvgOfCloseRate(stockPriceObj,numberOfData);
+		}
+		else
+		{
+			return respModelObj;
+		}
 		
-		sumOfCostPriceValue = calculateSumOfCloseRate(stockPriceObj);
 		
-		return sumOfCostPriceValue;
+		return respModelObj;
 	}
 	
-	public Double calculateSumOfCloseRate(List<StockPrice> stockPriceList)
+	public ResponseModel calculateSumAndAvgOfCloseRate(List<StockPrice> stockPriceList,int volumeOfData)
 	{
-		double costPriceValue;
 		
+		
+		ResponseModel responseModel = new ResponseModel();
 		for(StockPrice costPrice : stockPriceList)
 		{
 			costPriceValue = costPrice.getClose() ;
-			CostpriceGlobalValue = CostpriceGlobalValue+costPriceValue;
+			costpriceGlobalValue = costpriceGlobalValue+costPriceValue;
 		}
-		return CostpriceGlobalValue;
+		responseModel.setSumOfCostPrice(costpriceGlobalValue);
+		try
+		{
+		avgCostPrice = costpriceGlobalValue/volumeOfData;
+		if(avgCostPrice>0.0)
+		{
+			responseModel.setAvgOfCosePrice(avgCostPrice);
+		}
+		
+		}
+		catch(ArithmeticException e)
+		{
+			
+		}
+		return responseModel;
 	}
 	
 }

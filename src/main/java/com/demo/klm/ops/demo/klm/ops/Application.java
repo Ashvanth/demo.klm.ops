@@ -9,14 +9,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.demo.klm.ops.demo.klm.ops.h2.dao.StockPriceJdbcRepository;
+import com.demo.klm.ops.demo.klm.ops.h2.dao.StockPriceJdbcRepositoryDAO;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner{
 	
 	
 	@Autowired
-    StockPriceJdbcRepository repository;
+    StockPriceJdbcRepositoryDAO repository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);

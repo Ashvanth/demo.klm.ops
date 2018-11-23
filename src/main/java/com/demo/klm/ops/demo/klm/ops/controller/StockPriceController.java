@@ -12,14 +12,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.klm.ops.demo.klm.ops.business.StockPriceBusinessService;
-import com.demo.klm.ops.demo.klm.ops.h2.dao.StockPriceJdbcRepository;
+import com.demo.klm.ops.demo.klm.ops.h2.dao.StockPriceJdbcRepositoryDAO;
 import com.demo.klm.ops.demo.klm.ops.model.StockPrice;
+import com.demo.klm.ops.security.ResponseModel;
 
 @RestController
 public class StockPriceController {
 	
 	@Autowired
-	StockPriceJdbcRepository jdbcRep;
+	StockPriceJdbcRepositoryDAO jdbcRep;
 	
 	@Autowired
 	StockPriceBusinessService businessService;
@@ -38,26 +39,41 @@ public class StockPriceController {
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,value = "/getStocks/query")
-	public Double getCostByPeriod(@QueryParam("date") String date,@QueryParam("month") String month,@QueryParam("year") String year) 
+	public String getCostByPeriod(@QueryParam("date") String date,@QueryParam("month") String month,@QueryParam("year") String year) 
 	{
 		String dateinput=null;
 		Double closePrice = null;
+		String sumOfCloseRate=null;
+		String avgOfCloseRate = null;
+		ResponseModel responseModel = new ResponseModel();
+		if(date==null && month==null && year==null)
+		{
+			return "No input parameter recieved OR Incorrect format ";
+		}
 		if(date!=null && month!=null && year!=null)
 		{
-			System.out.println("Into all 3 values method");
-			dateinput = month+"-"+date+"-"+year;
+			dateinput = month+"/"+date+"/"+year;
 			try {
-				return businessService.getCostByDate(dateinput);
+				closePrice=	businessService.getCostByDate(dateinput);
+				return "Sum of close rate calculated for input URL DAY & MONTH & YEAR  "+Double.toString(closePrice);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
-		if(date!=null && month!=null && year==null)
+		if(  year!=null  && month!=null && date==null)
 		{
-			dateinput = month+"-"+date+"-";
-			return businessService.getCostByDateAndMonth(dateinput);
+			dateinput =month+"/%%/"+year;
+			responseModel=	businessService.getCostByYearAndMonth(dateinput);
+			 sumOfCloseRate = Double.toString(responseModel.getSumOfCostPrice());
+			 avgOfCloseRate = Double.toString(responseModel.getAvgOfCosePrice());
+			if(sumOfCloseRate!=null && avgOfCloseRate!= null)
+			{
+			return "Sum of close rate calculated by MONTH & YEAR \n"+sumOfCloseRate +"    \n Avg close rate "+avgOfCloseRate;
+			}else
+			{
+				return "No Close Returned for the YEAR & MONTH";
+			}
 		}
 		
 		
@@ -73,9 +89,18 @@ public class StockPriceController {
 		{
 			dateinput="/"+year;
 		}
-		closePrice = businessService.getCostByPeriod(dateinput);
+		responseModel = businessService.getCostByPeriod(dateinput);
+		sumOfCloseRate = Double.toString(responseModel.getSumOfCostPrice());
+		 avgOfCloseRate = Double.toString(responseModel.getAvgOfCosePrice());
+		if(sumOfCloseRate!=null && avgOfCloseRate!= null)
+		{
+		return "Sum of close rate calculated by MONTH/ YEAR / DAY "+sumOfCloseRate+"\n" +"   \n Avg close rate "+avgOfCloseRate;
+		}else
+		{
+			return "No Close rate Returned for the YEAR / MONTH / DAY";
+		}
 		
-		return closePrice;
+		
 
 	}
 
