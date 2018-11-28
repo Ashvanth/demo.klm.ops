@@ -12,14 +12,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.demo.klm.ops.demo.klm.ops.h2.dao.StockPriceJdbcRepositoryDAO;
 
 @SpringBootApplication
-public class Application implements CommandLineRunner{
+public class StockApplication implements CommandLineRunner{
 	
 	
 	@Autowired
     StockPriceJdbcRepositoryDAO repository;
 
 	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+		SpringApplication.run(StockApplication.class, args);
 	}
 
 	@Override

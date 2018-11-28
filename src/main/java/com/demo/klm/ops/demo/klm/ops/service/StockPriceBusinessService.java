@@ -1,4 +1,4 @@
-package com.demo.klm.ops.demo.klm.ops.business;
+package com.demo.klm.ops.demo.klm.ops.service;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -22,23 +22,22 @@ public class StockPriceBusinessService {
 	private	double costPriceValue;
 
 	
-	public Double getCostByDate(String date) throws ParseException
+	public StockPrice closeRateOverTime(String date) throws ParseException
 	{
 		StockPrice stockPriceObj = new StockPrice();
-		 Double closeRate = null;
 		 String dateFormat = date.replace("-", "/");
 		stockPriceObj = jdbcRep.fetchCostByDate(dateFormat);
 		
 		//to get close rate from the list 
 		if(stockPriceObj!=null )
 		{
-		closeRate =stockPriceObj.getClose();
+		return stockPriceObj;
 		}
-		return closeRate;
+		return null;
 		
 	}
 	
-	public ResponseModel getCostByYearAndMonth(String date)
+	public ResponseModel averageCloseRateOverPeriod(String date)
 	{
 		int numberOfData = 0 ;
 		List<StockPrice> stockPriceObj = new ArrayList<StockPrice>();

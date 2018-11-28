@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.demo.klm.ops.demo.klm.ops.business.StockPriceBusinessService;
 import com.demo.klm.ops.demo.klm.ops.h2.dao.StockPriceJdbcRepositoryDAO;
 import com.demo.klm.ops.demo.klm.ops.model.StockPrice;
+import com.demo.klm.ops.demo.klm.ops.service.StockPriceBusinessService;
 import com.demo.klm.ops.security.ResponseModel;
 
 @RestController
@@ -33,19 +33,26 @@ public class StockPriceController {
 	
 	
 	@RequestMapping(method=RequestMethod.GET,value = "/getStocks/{date}")
-	public Double getCostByDate(@PathVariable("date") String date ) throws ParseException
+	public StockPrice closeRateOverTime(@PathVariable("date") String date ) throws ParseException
 	{
-		return businessService.getCostByDate(date);
+		StockPrice stockPriceObj = new StockPrice();
+		stockPriceObj =  businessService.closeRateOverTime(date);
+		if(stockPriceObj!=null)
+		{
+		return stockPriceObj;
+		}
+		return null;
 	}
 	
 	@RequestMapping(method=RequestMethod.GET,value = "/getStocks/query")
-	public String getCostByPeriod(@QueryParam("date") String date,@QueryParam("month") String month,@QueryParam("year") String year) 
+	public String averageCloseRateOverPeriod(@QueryParam("date") String date,@QueryParam("month") String month,@QueryParam("year") String year) 
 	{
 		String dateinput=null;
 		Double closePrice = null;
 		String sumOfCloseRate=null;
 		String avgOfCloseRate = null;
 		ResponseModel responseModel = new ResponseModel();
+		StockPrice stockPriceAvgObj = new StockPrice();
 		if(date==null && month==null && year==null)
 		{
 			return "No input parameter recieved OR Incorrect format ";
@@ -54,7 +61,11 @@ public class StockPriceController {
 		{
 			dateinput = month+"/"+date+"/"+year;
 			try {
-				closePrice=	businessService.getCostByDate(dateinput);
+				stockPriceAvgObj=	businessService.closeRateOverTime(dateinput);
+				if(stockPriceAvgObj!=null)
+				{
+					closePrice = stockPriceAvgObj.getClose();
+				}
 				return "Sum of close rate calculated for input URL DAY & MONTH & YEAR  "+Double.toString(closePrice);
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -64,7 +75,7 @@ public class StockPriceController {
 		if(  year!=null  && month!=null && date==null)
 		{
 			dateinput =month+"/%%/"+year;
-			responseModel=	businessService.getCostByYearAndMonth(dateinput);
+			responseModel=	businessService.averageCloseRateOverPeriod(dateinput);
 			 sumOfCloseRate = Double.toString(responseModel.getSumOfCostPrice());
 			 avgOfCloseRate = Double.toString(responseModel.getAvgOfCosePrice());
 			if(sumOfCloseRate!=null && avgOfCloseRate!= null)
